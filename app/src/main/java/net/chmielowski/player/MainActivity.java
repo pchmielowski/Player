@@ -8,6 +8,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import java.io.IOException;
@@ -36,15 +37,22 @@ class MainActivity extends AppCompatActivity {
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             player.setDataSource(
-                    "https://s3.eu-central-1.amazonaws"
-                            + ".com/net-chmielowski-test-bucket-1/Angels.mp3"
-                            + ".wav"
+                    "https://s3.eu-central-1.amazonaws.com/"
+                            + "net-chmielowski-test-bucket-1/song.wav"
             );
             player.setOnPreparedListener(
                     new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mediaPlayer) {
                             findViewById(R.id.play).setVisibility(View.VISIBLE);
+                        }
+                    });
+            player.setOnBufferingUpdateListener(
+                    new MediaPlayer.OnBufferingUpdateListener() {
+                        @Override
+                        public void onBufferingUpdate(MediaPlayer mediaPlayer,
+                                int percent) {
+                            Log.d("pchm", String.valueOf(percent));
                         }
                     });
             player.prepareAsync();
